@@ -1,0 +1,713 @@
+//Your public declarations go here...   
+function AllocateSSD()
+{
+    
+	try
+    {
+        var app = TheApplication();
+        var BO = app.GetBusObject("Service Request");
+        var BC = BO.GetBusComp("Service Request");
+        var bc = BO.GetBusComp("VS Area Master");
+		var asset = this.GetFieldValue("Asset Number");
+        with(BC)
+        {
+            ClearToQuery();
+            ActivateField("Service Postal Code (FS)");
+            ActivateField("Account Id");            
+            SetSearchSpec("Account Id",this.GetFieldValue("Account Id"));
+            ExecuteQuery(ForwardOnly);
+            var isdata = FirstRecord();
+            var count = CountRecords();             
+            if (isdata)
+            {
+                var SRzipcode = GetFieldValue("Service Postal Code (FS)");                
+                with(bc)
+                {
+                    ClearToQuery();
+                    ActivateField("VS Pincode");
+                    ActivateField("VS SSD Franchise");
+                    SetSearchSpec("VS Pincode", SRzipcode);
+                    ExecuteQuery(ForwardOnly);
+                    var isrecord = FirstRecord(); 				                   
+                    if(isrecord)
+                    {
+                        //var areazipcode = GetFieldValue("VS Pincode");                   
+                        //var allocationSSD = SRzipcode - areazipcode;                         
+                       
+                             var SSDValue = GetFieldValue("VS SSD Franchise");                            
+                             this.SetFieldValue("VS Organization Name", SSDValue);
+							 this.WriteRecord();                           
+                            
+                     }					
+					else
+					{
+						app.RaiseErrorText("There Is No SSD Related to this Pincode");
+					}
+					
+						                        
+                        //isrecord = NextRecord();
+                    
+                    
+                }
+            }
+        }
+
+        this.InvokeMethod("RefreshBusComp");
+        }
+        
+     catch(e)
+    {
+        throw e;
+    }
+    
+
+
+
+   finally
+    {
+        app = null;
+        BO = null;
+        BC = null;
+        bc = null;
+    }
+	
+}
+
+//Your public declarations go here...   
+function AllocateSSD()
+{
+    
+	try
+    {
+        var app = TheApplication();
+        var BO = app.GetBusObject("Service Request");
+        var BC = BO.GetBusComp("Service Request");
+        var bc = BO.GetBusComp("VS Area Master");
+		var asset = this.GetFieldValue("Asset Number");
+        with(BC)
+        {
+            ClearToQuery();
+            ActivateField("Service Postal Code (FS)");
+            ActivateField("Account Id");            
+            SetSearchSpec("Account Id",this.GetFieldValue("Account Id"));
+            ExecuteQuery(ForwardOnly);
+            var isdata = FirstRecord();
+            var count = CountRecords();             
+            if (isdata)
+            {
+                var SRzipcode = GetFieldValue("Service Postal Code (FS)");                
+                with(bc)
+                {
+                    ClearToQuery();
+                    ActivateField("VS Pincode");
+                    ActivateField("VS SSD Franchise");
+                    SetSearchSpec("VS Pincode", SRzipcode);
+                    ExecuteQuery(ForwardOnly);
+                    var isrecord = FirstRecord(); 				                   
+                    if(isrecord)
+                    {
+                        //var areazipcode = GetFieldValue("VS Pincode");                   
+                        //var allocationSSD = SRzipcode - areazipcode;                         
+                       
+                             var SSDValue = GetFieldValue("VS SSD Franchise");                            
+                             this.SetFieldValue("VS Organization Name", SSDValue);
+							 this.WriteRecord();                           
+                            
+                     }					
+					else
+					{
+						app.RaiseErrorText("There Is No SSD Related to this Pincode");
+					}
+					
+						                        
+                        //isrecord = NextRecord();
+                    
+                    
+                }
+            }
+        }
+
+        this.InvokeMethod("RefreshBusComp");
+        }
+        
+     catch(e)
+    {
+        throw e;
+    }
+    
+
+
+
+   finally
+    {
+        app = null;
+        BO = null;
+        BC = null;
+        bc = null;
+    }
+	
+}
+
+
+//Your public declarations go here...  
+//Your public declarations go here...
+function Backend(SRid)
+{
+    try
+    {
+        var app = TheApplication();
+        var BO = app.GetBusObject("Service Request");
+        var BC = BO.GetBusComp("VS Service Request Backend Team");       
+        with(BC)
+        {
+          
+            NewRecord(NewAfter);			
+            BC.SetFieldValue("SR Id", SRid);      
+            WriteRecord();
+			this.InvokeMethod("RefreshBusComp");
+			//app.ActiveBusObject().GetBusComp("VS Service Request Backend Team").InvokeMethod("RefreshBusComp");
+          TheApplication().RaiseErrorText("This Service Request will be Handled by Backend");
+        }    
+       
+    }
+    catch(e)
+    {
+        throw e;
+    }
+    finally
+    {
+        
+       BC = null;
+       BO = null;
+       app = null;
+    }
+}
+
+
+//Your public declarations go here...  
+function callback()
+{
+	try
+	{
+		var reason = this.GetFieldValue("Sub-Status");
+		var Status = this.GetFieldValue("Status");
+		if(reason == "Call Unanswered")
+		{
+			this.SetFieldValue("VS Call Back Flag","Y");
+			this.WriteRecord();
+		}
+		if(Status == "Open" || Status == "Cancelled" || Status == "In Process" || Status == "Pending")
+		{
+			this.SetFieldValue("VS Call Back Flag","N");
+			this.WriteRecord();
+		}
+	}
+	catch(e)
+	{
+		throw e;
+	}
+	finally{
+	}
+
+
+function DateObjectToStringFull(dateObject) 
+{
+	var datestring;
+	var dateYear = dateObject.getFullYear();
+	var dateMonth = dateObject.getMonth();
+	var dateday = dateObject.getDate();
+	var dateHour = dateObject.getHours();
+    var dateMin = dateObject.getMinutes();
+    var dateSec = dateObject.getSeconds();
+	dateMonth = ToNumber(dateMonth).toFixed(0) - (-1);
+     if (dateMonth < 10) dateMonth = "0" + dateMonth;
+     if (dateday < 10) dateday = "0" + dateday;
+
+
+     datestring = dateMonth + "/" + dateday + "/" + dateYear;
+     return datestring;
+} 
+
+
+//Your public declarations go here...  
+function DateObjectToStringFullorg(dateObject)
+{
+	var datestring;
+	var dateYear = dateObject.getFullYear();
+	var dateMonth = dateObject.getMonth();
+	var dateday = dateObject.getDate();
+	var dateHour = dateObject.getHours();
+    var dateMin = dateObject.getMinutes();
+    var dateSec = dateObject.getSeconds();
+	dateMonth = ToNumber(dateMonth).toFixed(0) - (-1);
+	 if (dateMonth < 10) dateMonth = "0" + dateMonth;
+	 if (dateday < 10) dateday = "0" + dateday;
+	 if (dateHour < 10) dateHour = "0" + dateHour;
+	 if (dateMin < 10) dateMin = "0" + dateMin;
+	 if (dateSec < 10) dateSec = "0" + dateSec;
+
+
+
+     datestring = dateMonth + "/" + dateday + "/" + dateYear + " " + dateHour + ":" + dateMin + ":" + dateSec;
+     return datestring;
+}
+
+
+function deallocate()
+{
+	try
+	{
+		var theapp = TheApplication();
+		var orgbo = theapp.GetBusObject("Service Request");
+		var orgbc = orgbo.GetBusComp("Service Request");
+		var loginid = theapp.LoginId();
+		
+		with(orgbo)
+		{
+			ClearToQuery();
+			ActivateField("VS Created By Id");
+			ActivateField("VS Organization Type");
+			SetSearchExpr("[VS Created By Id] = '" + loginid +"' AND [VS Organization Type] = '" + 'SSD' + "'");
+			ExecuteQuery(ForwardOnly);
+			if(FirstRecord())
+			{
+				theapp.RaiseErrorText("You cannot deallocate this Service Request");
+			}
+		}
+	}
+	catch(e)
+	{
+		throw e;
+	}
+	finally
+	{
+		orgbo = null;
+		orgbc = null;
+		theapp =  null;
+	}
+}
+
+
+function dupilcatecheck()
+{
+
+	try
+	{
+		var theapp = TheApplication();
+		var srbo = theapp.GetBusObject("Service Request");
+		var srbc = srbo.GetBusComp("Service Request");
+		var id = this.GetFieldValue("Id");
+		var srtype = this.GetFieldValue("SR Type");
+		var accountname = this.GetFieldValue("Account Id");
+		var status1 = this.GetFieldValue("Status");
+		var productid = this.GetFieldValue("Product Id");
+		var todaydate = new Date();
+		
+		with(srbc)
+		{
+			ClearToQuery();
+			ActivateField("SR Type");
+			ActivateField("Account Id");
+			ActivateField("Status");
+			ActivateField("Product Id");
+			SetSearchExpr("[SR Type] = '" + srtype +"' AND ([Status] = 'Open' OR [Status] = 'Pending' OR [Status] = 'In Process' OR [Status] = 'Closed') AND [Account Id] = '" + accountname + "' AND [Product Id] = '" + productid + "' AND [Id] <> '" + id + "'");
+			ExecuteQuery(ForwardOnly);
+			var isrecord = FirstRecord();
+			while(isrecord)
+			{
+			
+				var status2 = GetFieldValue("Status");
+				var closeddate = new Date(GetFieldValue("Closed Date"));
+				if(status2 == 'Closed')
+				{
+				    
+				    if(closeddate != null && closeddate != "")
+				    {
+						if(todaydate.getTime() <= (closeddate.getTime() + 2592000000)) theapp.RaiseErrorText("Service Request already closed for same account and same product,we can reopen that SR!");
+				    }
+				}
+				else
+				{
+					theapp.RaiseErrorText("Service Request already open for same account and same product!");
+				}
+				isrecord = NextRecord();
+			}
+			
+		}
+	}
+	catch(e)
+	{
+		throw e;
+	}
+	finally
+	{
+		srbo = null;
+		srbc =  null;
+		theapp =  null;
+		todaydate =  null;
+		closeddate = null;
+	}
+	
+} 
+
+
+function holidaydate(expectedattenddate,areatype,state,expectedattenddateobject1)
+{
+	try
+	{
+		var theapp =  TheApplication();
+		var srvbo =  theapp.GetBusObject("Service Request");
+		var holidaymasterbc = srvbo.GetBusComp("VS Holiday Master");
+		var newdate1 =  new Date(expectedattenddate);
+        with(holidaymasterbc)
+		{
+			ClearToQuery();
+			SetSearchExpr("[VS Date] = '" + expectedattenddate + "' AND [VS State] = '" +state + "'");
+			ExecuteQuery(ForwardOnly);
+			var issrecord = FirstRecord();
+			if(issrecord)
+			{ 
+				makesrexpecteddate(newdate1,areatype,state,expectedattenddateobject1);
+					 
+			}
+			else
+			{ 
+			    var checkday = expectedattenddateobject1.getDay();
+				 if(checkday == '0' || checkday == '6')
+				 {
+				    makesrexpecteddate(newdate1,areatype,state,expectedattenddateobject1);
+				 }
+				 else
+				 {
+			      var orgdate = DateObjectToStringFullorg(expectedattenddateobject1);
+			      this.SetFieldValue("Expected SR Attend Time",orgdate);
+			      this.WriteRecord();
+			     }
+			}
+		}
+	}
+	catch(e)
+	{
+		throw e;
+	}
+	finally
+	{
+		theapp = null;
+		srvbo = null;
+		holidaymasterbc = null;
+		newdate1 = null;
+	}
+}		
+
+
+
+
+function makesrexpecteddate(expectedattenddateobject,areatype,state,expectedattenddateobject1)
+{
+	try
+	{
+         var expectedattenddate;
+		 var orgexpectedattenddateobject;
+		 
+		if(areatype == "Local")
+		{
+		    orgexpectedattenddateobject = new Date(expectedattenddateobject1.getFullYear(), expectedattenddateobject1.getMonth(), expectedattenddateobject1.getDate(),expectedattenddateobject1.getHours()-(-24),expectedattenddateobject1.getMinutes(),expectedattenddateobject1.getSeconds());
+			expectedattenddateobject = new Date(expectedattenddateobject.getFullYear(), expectedattenddateobject.getMonth(), expectedattenddateobject.getDate()-(-1));
+			expectedattenddate = DateObjectToStringFull(expectedattenddateobject);		
+		}
+	else
+		{
+		    orgexpectedattenddateobject = new Date(orgexpectedattenddateobject.getFullYear(), expectedattenddateobject1.getMonth(), expectedattenddateobject1.getDate(),expectedattenddateobject1.getHours()-(-24),expectedattenddateobject1.getMinutes(),expectedattenddateobject1.getSeconds());	
+			expectedattenddateobject = new Date(expectedattenddateobject.getFullYear(), expectedattenddateobject.getMonth(), expectedattenddateobject.getDate()-(2));
+			expectedattenddate = DateObjectToStringFull(expectedattenddateobject);
+			
+		}
+		
+
+	holidaydate(expectedattenddate,areatype,state,orgexpectedattenddateobject);
+		
+	}
+	catch(e)
+	{
+		throw e;
+		
+	}
+	finally
+	{
+	   orgexpectedattenddateobject = null;
+	   expectedattenddateobject = null;
+	}
+} 
+
+
+function Register()
+{
+	try
+	{
+		var app = TheApplication();
+		var BO = app.GetBusObject("Service Request");
+        var BC = BO.GetBusComp("Service Request");
+		var ID = this.GetFieldValue("Id");
+		with (BC)
+		{
+			ClearToQuery();
+			ActivateField("VS Registered");
+			ActivateField("Status");
+			ActivateField("Sub-Status");
+			SetSearchExpr("[Id] = '"+ID+"'");
+			ExecuteQuery(ForwardOnly);
+			var isData = FirstRecord();
+			var registered = this.GetFieldValue("VS Registered");
+			if(registered == "N")
+			{
+				this.SetFieldValue("Status", "In Process");
+				this.SetFieldValue("Sub-Status", "Executed");
+				this.SetFieldValue("VS Registered", 'Y');
+				this.WriteRecord();
+				app.RaiseErrorText("SR Registered Successful");
+			}
+			else
+			{
+				app.RaiseErrorText("SR Is Already Registered");
+			}
+
+		}
+        
+
+	}
+	catch (e)
+	{
+		throw e;
+	}
+	finally
+	{
+		 BC = null;
+		 BO = null;
+		 app = null;
+        
+	}
+}
+
+
+//Your public declarations go here... 
+function RegisterValidation()
+{
+	try
+	{
+		var theApp = TheApplication();
+		var BO = theApp.GetBusObject("Service Request");
+		var BC = BO.GetBusComp("Service Request");
+		var id = this.GetFieldValue("Id");
+		with(BC)
+		{
+			ClearToQuery();
+			ActivateField("Id");
+			ActivateField("VS Registered");
+			SetSearchExpr("[Id] = '" + id + "'");
+			ExecuteQuery(ForwardOnly);
+			var isRecord = FirstRecord();
+			{
+				var register = GetFieldValue("VS Registered");
+				if (register == 'N' || register == null ) 
+				theApp.RaiseErrorText("Please Register this Service Request First");
+
+			}
+			
+		}
+	}
+	catch(e)
+	{
+		throw e;
+	}
+	finally
+	{
+		BC = null;
+		BO = null;
+		theApp = null;
+	}
+}
+
+
+
+	
+//Your public declarations go here...  
+function Reopen()
+{
+    try
+    {
+        var theApp = TheApplication();
+		var BO = theApp.GetBusObject("Service Request");
+		var BC = BO.GetBusComp("VS Service Request Clone");
+		with(BC)
+		{
+			ClearToQuery();
+			SetSearchSpec("Id", this.GetFieldValue("Id"));
+			ExecuteQuery(ForwardOnly);
+			if(FirstRecord())
+			{
+				var CloseDate = new Date (GetFieldValue("Closed Date"));
+				var ClosedValidDate = new Date();
+			    {
+					if (ClosedValidDate.getTime() >= (CloseDate.getTime() + 2592000000 ))
+			        theApp.RaiseErrorText("SR can not be reopen after 30 closer days");
+		        }
+			        SetFieldValue("Status", "Open");
+					SetFieldValue("Sub-Status", "Reopen");
+					SetFieldValue("VS Resolve Over Call", "N");
+					WriteRecord(); 
+			}
+	    }
+		this.InvokeMethod("RefreshRecord");
+	}
+    catch (e)
+    {
+        throw e;
+    }
+    finally
+    {
+        theApp = null;
+		BO = null;
+		BC = null
+    }
+
+}  
+
+
+
+	
+	//Your public declarations go here...  
+function ResolveOverCall()
+{
+	try
+	{
+		var app = TheApplication();
+		var BO = app.GetBusObject("Service Request");
+        var BC = BO.GetBusComp("Service Request");
+		var ID = this.GetFieldValue("Id");
+		with (BC)
+		{
+			ClearToQuery();                       
+			ActivateField("VS Resolve Over Call");
+			ActivateField("Status");
+			ActivateField("VS Call Back Flag");
+			ActivateField("Sub-Status");
+			SetSearchExpr("[Id] = '"+ID+"'");
+			ExecuteQuery(ForwardOnly);
+			var isData = FirstRecord();
+			var registered = GetFieldValue("VS Resolve Over Call");
+			if(registered == 'N'||registered == null)
+			{
+				this.SetFieldValue("VS Call Back Flag","N");
+				this.SetFieldValue("VS Resolve Over Call", "Y");
+				this.SetFieldValue("Status", "Closed");
+				
+				this.WriteRecord();
+				this.InvokeMethod("RefreshBuscomp");
+			}
+		}
+	 
+	}
+	catch (e)
+	{
+		throw e;
+	}
+	finally
+	{
+		BC = null;
+		BO = null;
+		app = null;
+	}
+}
+
+
+function srattendexpextedtime()
+{
+	try
+	{
+		var theapp =  TheApplication();
+		var srvbo =  theapp.GetBusObject("Service Request");
+		var arermasterbvc = srvbo.GetBusComp("VS Area Master");
+		var raiseddateobject =  new Date(this.GetFieldValue("VS Raised Date"));
+		var state = this.GetFieldValue("Service State");
+		var area1 = this.GetFieldValue("VS Service Area");
+		var subarea = this.GetFieldValue("VS Service Sub Area");
+		var City = this.GetFieldValue("Service City");
+		var district = this.GetFieldValue("VS Service District");
+		var postalcode = this.GetFieldValue("Service Postal Code");
+		var areatype = "";
+		var assetno = this.GetFieldValue("Asset Number");
+		if(assetno == "") theapp.RaiseErrorText("Asset Number is Required for Allocation!");
+		with(arermasterbvc)
+		{
+			ClearToQuery();
+			ActivateField("VS State");
+			ActivateField("VS City");
+			ActivateField("VS District");
+			ActivateField("VS Area Sub Type");
+			ActivateField("VS Area");
+			ActivateField("VS Pincode");
+			ActivateField("VS Area Type");
+			SetSearchExpr("[VS State] = '" + state + "' AND [VS City] = '" + City + "' AND [VS District] = '" + district + "' AND [VS Area Sub Type] = '" + subarea + "' AND [VS Area] = '" + area1 + "'AND [VS Pincode] = '" + postalcode + "'");
+			ExecuteQuery(ForwardOnly);
+			var isrecord = FirstRecord();
+			if(isrecord)
+			{
+				areatype = GetFieldValue("VS Area Type");
+				makesrexpecteddate(raiseddateobject,areatype,state,raiseddateobject);
+		    }
+		}
+		
+	}
+	catch(e)
+	{
+		
+		throw e;
+	}
+	finally
+	{
+		theapp = null;
+		srvbo = null;
+		arermasterbvc = null;
+		raiseddateobject = null;
+	}
+}
+
+
+
+function BusComp_PreWriteRecord ()
+{
+   dupilcatecheck();
+   //callback();
+   return (ContinueOperation);
+}
+
+
+function BusComp_PreInvokeMethod(MethodName)
+{
+    switch (MethodName)
+	{
+		case "Reopen":
+	    {
+	        Reopen();
+			return (CancelOperation);
+		}
+
+		case "AllocateSSD":
+		{
+			//RegisterValidation();
+			srattendexpextedtime();
+			AllocateValidation();
+			AllocateSSD();
+			
+			
+			return(CancelOperation);
+		}
+
+		case "Deallocate":
+		{
+			deallocate();
+			return(CancelOperation);
+		}
+	}
+
+}
